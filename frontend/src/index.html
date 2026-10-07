@@ -4,9 +4,246 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drive 847</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        header {
+            background: #111827;
+            color: white;
+            padding: 24px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #d1d5db;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin-bottom: 5px;
+        }
+
+        .modules {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .module {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+            cursor: pointer;
+            transition: transform .15s;
+        }
+
+        .module:hover {
+            transform: translateY(-3px);
+        }
+
+        .module h3 {
+            margin-top: 0;
+        }
+
+        .module p {
+            color: #6b7280;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .records {
+            margin-top: 30px;
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+
+        button {
+            background: #111827;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 10px 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #374151;
+        }
+
+        #mensaje {
+            margin-top: 12px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
+
+<header>
     <h1>Drive 847</h1>
-    <p>Sistema en desarrollo.</p>
+    <p>Panel principal del sistema</p>
+</header>
+
+<main>
+
+    <section class="welcome">
+        <h2>Panel principal</h2>
+        <p>Selecciona un módulo para comenzar.</p>
+    </section>
+
+    <section class="modules">
+
+        <div class="module" onclick="mostrarRegistros()">
+            <h3>📋 Registros</h3>
+            <p>Administrar y consultar los registros del sistema.</p>
+            <span class="status">Activo</span>
+        </div>
+
+        <div class="module">
+            <h3>📊 Reportes</h3>
+            <p>Próximamente podrás consultar información y estadísticas.</p>
+            <span class="status">Próximamente</span>
+        </div>
+
+        <div class="module">
+            <h3>⚙️ Configuración</h3>
+            <p>Configuración general del sistema.</p>
+            <span class="status">Próximamente</span>
+        </div>
+
+    </section>
+
+    <section class="records" id="records">
+
+        <h2>Registros</h2>
+
+        <button onclick="cargarRegistros()">
+            Actualizar registros
+        </button>
+
+        <div id="mensaje"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+
+            <tbody id="tabla">
+            </tbody>
+        </table>
+
+    </section>
+
+</main>
+
+<script>
+
+const API = "http://localhost:8470";
+
+function mostrarRegistros() {
+    document.getElementById("records").scrollIntoView({
+        behavior: "smooth"
+    });
+}
+
+async function cargarRegistros() {
+
+    const mensaje = document.getElementById("mensaje");
+
+    try {
+
+        const response = await fetch(`${API}/api/records`);
+        const data = await response.json();
+
+        const tabla = document.getElementById("tabla");
+
+        tabla.innerHTML = "";
+
+        data.records.forEach(record => {
+
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${record.id}</td>
+                <td>${record.nombre}</td>
+                <td>${record.estado}</td>
+                <td>${record.created_at}</td>
+            `;
+
+            tabla.appendChild(fila);
+        });
+
+        mensaje.textContent =
+            `${data.total} registro(s) encontrado(s).`;
+
+    } catch (error) {
+
+        mensaje.textContent =
+            "No se pudo conectar con el backend.";
+
+        console.error(error);
+    }
+}
+
+cargarRegistros();
+
+</script>
+
 </body>
 </html>
