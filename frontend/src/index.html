@@ -1,238 +1,674 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drive 847</title>
 
-<title>Drive 847</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        button {
+            cursor: pointer;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f3f4f6;
-    color: #111827;
-}
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
 
-header {
-    background: #111827;
-    color: white;
-    padding: 24px;
-}
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,.12);
+        }
 
-header h1 {
-    margin: 0;
-}
+        .login-card h1 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
 
-header p {
-    margin: 6px 0 0;
-    color: #d1d5db;
-}
+        .login-card p {
+            color: #6b7280;
+        }
 
-main {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
+        .login-card input {
+            width: 100%;
+            padding: 13px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+        }
 
-.card {
-    background: white;
-    padding: 24px;
-    border-radius: 14px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 10px rgba(0,0,0,.08);
-}
+        .login-card button {
+            width: 100%;
+            padding: 13px;
+            border: 0;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+        }
 
-input,
-select,
-button {
-    padding: 10px;
-    border-radius: 7px;
-    border: 1px solid #d1d5db;
-    font-size: 14px;
-}
+        .error {
+            color: #dc2626;
+            margin-top: 15px;
+        }
 
-input,
-select {
-    width: 100%;
-    margin-bottom: 10px;
-}
+        .app {
+            display: none;
+        }
 
-button {
-    background: #111827;
-    color: white;
-    cursor: pointer;
-    border: none;
-}
+        header {
+            background: #111827;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-button:hover {
-    background: #374151;
-}
+        header h1 {
+            margin: 0;
+        }
 
-button.delete {
-    background: #b91c1c;
-}
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
-button.edit {
-    background: #2563eb;
-    margin-right: 5px;
-}
+        .logout {
+            background: #dc2626;
+            color: white;
+            border: 0;
+            padding: 9px 14px;
+            border-radius: 7px;
+        }
 
-.actions {
-    white-space: nowrap;
-}
+        nav {
+            background: white;
+            padding: 12px 30px;
+            border-bottom: 1px solid #ddd;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
+        nav button {
+            background: transparent;
+            border: 0;
+            padding: 10px 15px;
+            font-size: 15px;
+        }
 
-th,
-td {
-    padding: 12px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-}
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
 
-th {
-    background: #f9fafb;
-}
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(0,0,0,.06);
+        }
 
-.status {
-    margin-top: 12px;
-    font-weight: bold;
-}
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
 
-.empty {
-    text-align: center;
-    color: #6b7280;
-    padding: 30px;
-}
+        .stat {
+            padding: 25px;
+            border-radius: 12px;
+            background: #f3f4f6;
+        }
 
-@media (max-width: 700px) {
+        .stat strong {
+            display: block;
+            font-size: 38px;
+            margin-top: 10px;
+        }
 
-    table {
-        font-size: 13px;
-    }
+        input, select {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+        }
 
-    .actions button {
-        display: block;
-        width: 100%;
-        margin-bottom: 5px;
-    }
+        .primary {
+            background: #2563eb;
+            color: white;
+            border: 0;
+            padding: 10px 16px;
+            border-radius: 7px;
+        }
 
-}
+        .danger {
+            background: #dc2626;
+            color: white;
+            border: 0;
+            padding: 7px 12px;
+            border-radius: 6px;
+        }
 
-</style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        @media (max-width: 700px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header>
+<div id="loginScreen" class="login-container">
 
-    <h1>Drive 847</h1>
+    <div class="login-card">
 
-    <p>
-        Sistema de gestión
-    </p>
+        <h1>Drive 847</h1>
 
-</header>
+        <p>
+            Sistema de gestión
+        </p>
 
-<main>
+        <form onsubmit="iniciarSesion(event)">
 
-<section class="card">
+            <label>Usuario</label>
 
-    <h2 id="formTitle">
-        Nuevo registro
-    </h2>
+            <input
+                id="usuario"
+                type="text"
+                autocomplete="username"
+                required
+            >
 
-    <input
-        id="nombre"
-        type="text"
-        placeholder="Nombre del registro"
-    >
+            <label>Contraseña</label>
 
-    <select id="estado">
+            <input
+                id="password"
+                type="password"
+                autocomplete="current-password"
+                required
+            >
 
-        <option value="activo">
-            Activo
-        </option>
+            <button type="submit">
+                Iniciar sesión
+            </button>
 
-        <option value="inactivo">
-            Inactivo
-        </option>
+        </form>
 
-    </select>
+        <div
+            id="loginError"
+            class="error"
+        ></div>
 
-    <button onclick="guardarRegistro()">
-        Guardar
-    </button>
+    </div>
 
-    <button
-        id="cancelar"
-        onclick="cancelarEdicion()"
-        style="display:none; margin-left:5px;"
-    >
-        Cancelar
-    </button>
-
-    <div id="mensaje" class="status"></div>
-
-</section>
+</div>
 
 
-<section class="card">
+<div id="app" class="app">
 
-    <h2>
-        Registros
-    </h2>
+    <header>
 
-    <button onclick="cargarRegistros()">
-        Actualizar
-    </button>
+        <div>
+            <h1>Drive 847</h1>
+            <div>Sistema de gestión</div>
+        </div>
 
-    <table>
+        <div class="user-area">
 
-        <thead>
+            <span id="usuarioActual"></span>
 
-            <tr>
+            <button
+                class="logout"
+                onclick="cerrarSesion()"
+            >
+                Cerrar sesión
+            </button>
 
-                <th>ID</th>
+        </div>
 
-                <th>Nombre</th>
+    </header>
 
-                <th>Estado</th>
 
-                <th>Fecha</th>
+    <nav>
 
-                <th>Acciones</th>
+        <button onclick="irA('inicio')">
+            Inicio
+        </button>
 
-            </tr>
+        <button onclick="irA('registros')">
+            Registros
+        </button>
 
-        </thead>
+        <button onclick="irA('reportes')">
+            Reportes
+        </button>
 
-        <tbody id="tabla">
+        <button onclick="irA('configuracion')">
+            Configuración
+        </button>
 
-        </tbody>
+    </nav>
 
-    </table>
 
-</section>
+    <main>
 
-</main>
+        <section id="inicio" class="card">
+
+            <h2>Panel principal</h2>
+
+            <p>
+                Bienvenido a Drive 847.
+            </p>
+
+            <div class="stats">
+
+                <div class="stat">
+                    Total
+                    <strong id="totalRegistros">0</strong>
+                </div>
+
+                <div class="stat">
+                    Activos
+                    <strong id="totalActivos">0</strong>
+                </div>
+
+                <div class="stat">
+                    Inactivos
+                    <strong id="totalInactivos">0</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section
+            id="registros"
+            class="card"
+            style="display:none;"
+        >
+
+            <h2>Registros</h2>
+
+            <div>
+
+                <input
+                    id="buscar"
+                    type="text"
+                    placeholder="Buscar por nombre"
+                    oninput="filtrarRegistros()"
+                >
+
+                <select
+                    id="filtroEstado"
+                    onchange="filtrarRegistros()"
+                >
+                    <option value="todos">
+                        Todos
+                    </option>
+
+                    <option value="activo">
+                        Activos
+                    </option>
+
+                    <option value="inactivo">
+                        Inactivos
+                    </option>
+                </select>
+
+                <button
+                    class="primary"
+                    onclick="nuevoRegistro()"
+                >
+                    Nuevo registro
+                </button>
+
+            </div>
+
+
+            <div id="formularioRegistro" style="display:none; margin-top:20px;">
+
+                <input
+                    id="registroNombre"
+                    type="text"
+                    placeholder="Nombre"
+                >
+
+                <select id="registroEstado">
+
+                    <option value="activo">
+                        Activo
+                    </option>
+
+                    <option value="inactivo">
+                        Inactivo
+                    </option>
+
+                </select>
+
+                <button
+                    class="primary"
+                    onclick="guardarRegistro()"
+                >
+                    Guardar
+                </button>
+
+                <button onclick="cancelarEdicion()">
+                    Cancelar
+                </button>
+
+            </div>
+
+
+            <div id="contador" style="margin-top:20px;"></div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="tablaRegistros"></tbody>
+
+            </table>
+
+        </section>
+
+
+        <section
+            id="reportes"
+            class="card"
+            style="display:none;"
+        >
+
+            <h2>Reportes</h2>
+
+            <div class="stats">
+
+                <div class="stat">
+                    Total
+                    <strong id="reporteTotal">0</strong>
+                </div>
+
+                <div class="stat">
+                    Activos
+                    <strong id="reporteActivos">0</strong>
+                </div>
+
+                <div class="stat">
+                    Inactivos
+                    <strong id="reporteInactivos">0</strong>
+                </div>
+
+            </div>
+
+            <p style="margin-top:25px;">
+                Último registro:
+                <strong id="reporteUltimo">
+                    Sin registros
+                </strong>
+            </p>
+
+            <button
+                class="primary"
+                onclick="generarReporte()"
+            >
+                Actualizar reporte
+            </button>
+
+        </section>
+
+
+        <section
+            id="configuracion"
+            class="card"
+            style="display:none;"
+        >
+
+            <h2>Configuración</h2>
+
+            <p>
+                Información del sistema.
+            </p>
+
+            <p>
+                <strong>Versión:</strong>
+                0.5.0
+            </p>
+
+            <p>
+                <strong>Frontend:</strong>
+                localhost:847
+            </p>
+
+            <p>
+                <strong>Backend:</strong>
+                localhost:8470
+            </p>
+
+            <p>
+                <strong>Base de datos:</strong>
+                SQLite
+            </p>
+
+            <p>
+                <strong>Usuario actual:</strong>
+                <span id="configUsuario"></span>
+            </p>
+
+            <p>
+                <strong>Rol:</strong>
+                <span id="configRol"></span>
+            </p>
+
+        </section>
+
+    </main>
+
+</div>
 
 
 <script>
 
 const API = "http://localhost:8470";
 
+let registros = [];
+
 let registroEditando = null;
+
+
+async function iniciarSesion(event) {
+
+    event.preventDefault();
+
+    const usuario =
+        document.getElementById("usuario").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const error =
+        document.getElementById("loginError");
+
+    error.textContent = "";
+
+    try {
+
+        const response =
+            await fetch(`${API}/api/login`, {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    usuario,
+                    password
+                })
+
+            });
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            error.textContent =
+                data.error || "No fue posible iniciar sesión";
+
+            return;
+        }
+
+        localStorage.setItem(
+            "drive847_token",
+            data.token
+        );
+
+        localStorage.setItem(
+            "drive847_user",
+            JSON.stringify(data.user)
+        );
+
+        mostrarAplicacion();
+
+    } catch (e) {
+
+        error.textContent =
+            "No se pudo conectar con el servidor.";
+
+        console.error(e);
+    }
+}
+
+
+function mostrarAplicacion() {
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("drive847_user")
+        );
+
+    if (!user) {
+        return;
+    }
+
+    document.getElementById(
+        "loginScreen"
+    ).style.display = "none";
+
+    document.getElementById(
+        "app"
+    ).style.display = "block";
+
+    document.getElementById(
+        "usuarioActual"
+    ).textContent =
+        `${user.nombre} (${user.rol})`;
+
+    document.getElementById(
+        "configUsuario"
+    ).textContent =
+        user.usuario;
+
+    document.getElementById(
+        "configRol"
+    ).textContent =
+        user.rol;
+
+    cargarRegistros();
+}
+
+
+function cerrarSesion() {
+
+    localStorage.removeItem(
+        "drive847_token"
+    );
+
+    localStorage.removeItem(
+        "drive847_user"
+    );
+
+    location.reload();
+}
+
+
+function irA(modulo) {
+
+    const secciones = [
+        "inicio",
+        "registros",
+        "reportes",
+        "configuracion"
+    ];
+
+    secciones.forEach(id => {
+
+        document.getElementById(id).style.display =
+            id === modulo
+                ? "block"
+                : "none";
+
+    });
+
+    if (modulo === "registros") {
+        cargarRegistros();
+    }
+
+    if (modulo === "reportes") {
+        generarReporte();
+    }
+}
 
 
 async function cargarRegistros() {
@@ -245,240 +681,197 @@ async function cargarRegistros() {
         const data =
             await response.json();
 
-        const tabla =
-            document.getElementById("tabla");
+        registros = data.records || [];
 
-        tabla.innerHTML = "";
+        filtrarRegistros();
 
-        if (data.records.length === 0) {
-
-            tabla.innerHTML = `
-                <tr>
-                    <td colspan="5" class="empty">
-                        No existen registros.
-                    </td>
-                </tr>
-            `;
-
-            return;
-        }
-
-        data.records.forEach(record => {
-
-            const fila =
-                document.createElement("tr");
-
-            fila.innerHTML = `
-
-                <td>
-                    ${record.id}
-                </td>
-
-                <td>
-                    ${escapeHtml(record.nombre)}
-                </td>
-
-                <td>
-                    ${escapeHtml(record.estado)}
-                </td>
-
-                <td>
-                    ${record.created_at}
-                </td>
-
-                <td class="actions">
-
-                    <button
-                        class="edit"
-                        onclick='editarRegistro(${JSON.stringify(record)})'
-                    >
-                        Editar
-                    </button>
-
-                    <button
-                        class="delete"
-                        onclick="eliminarRegistro(${record.id})"
-                    >
-                        Eliminar
-                    </button>
-
-                </td>
-
-            `;
-
-            tabla.appendChild(fila);
-
-        });
+        actualizarDashboard();
 
     } catch (error) {
 
-        mostrarMensaje(
-            "No se pudo conectar con el backend."
-        );
-
         console.error(error);
     }
+}
+
+
+function filtrarRegistros() {
+
+    const texto =
+        document.getElementById("buscar").value
+            .toLowerCase();
+
+    const estado =
+        document.getElementById("filtroEstado").value;
+
+    const filtrados =
+        registros.filter(registro => {
+
+            const coincideNombre =
+                registro.nombre
+                    .toLowerCase()
+                    .includes(texto);
+
+            const coincideEstado =
+                estado === "todos" ||
+                registro.estado === estado;
+
+            return coincideNombre && coincideEstado;
+
+        });
+
+    mostrarRegistros(filtrados);
+}
+
+
+function mostrarRegistros(lista) {
+
+    const tabla =
+        document.getElementById(
+            "tablaRegistros"
+        );
+
+    tabla.innerHTML = "";
+
+    lista.forEach(registro => {
+
+        const fila =
+            document.createElement("tr");
+
+        fila.innerHTML = `
+            <td>${registro.id}</td>
+            <td>${escapeHtml(registro.nombre)}</td>
+            <td>${registro.estado}</td>
+            <td>${registro.created_at}</td>
+            <td>
+                <button onclick="editarRegistro(${registro.id})">
+                    Editar
+                </button>
+
+                <button
+                    class="danger"
+                    onclick="eliminarRegistro(${registro.id})"
+                >
+                    Eliminar
+                </button>
+            </td>
+        `;
+
+        tabla.appendChild(fila);
+
+    });
+
+    document.getElementById(
+        "contador"
+    ).textContent =
+        `${lista.length} de ${registros.length} registro(s)`;
+}
+
+
+function nuevoRegistro() {
+
+    registroEditando = null;
+
+    document.getElementById(
+        "registroNombre"
+    ).value = "";
+
+    document.getElementById(
+        "registroEstado"
+    ).value = "activo";
+
+    document.getElementById(
+        "formularioRegistro"
+    ).style.display = "block";
 }
 
 
 async function guardarRegistro() {
 
     const nombre =
-        document.getElementById("nombre").value.trim();
+        document.getElementById(
+            "registroNombre"
+        ).value.trim();
 
     const estado =
-        document.getElementById("estado").value;
+        document.getElementById(
+            "registroEstado"
+        ).value;
 
     if (!nombre) {
-
-        mostrarMensaje(
-            "Escribe un nombre."
-        );
-
+        alert("El nombre es obligatorio.");
         return;
     }
 
-    try {
+    const method =
+        registroEditando
+            ? "PUT"
+            : "POST";
 
-        let response;
+    const url =
+        registroEditando
+            ? `${API}/api/records/${registroEditando}`
+            : `${API}/api/records`;
 
-        if (registroEditando) {
+    await fetch(url, {
 
-            response = await fetch(
-                `${API}/api/records/${registroEditando}`,
-                {
-                    method: "PUT",
+        method,
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
+        headers: {
+            "Content-Type": "application/json"
+        },
 
-                    body: JSON.stringify({
-                        nombre,
-                        estado
-                    })
-                }
-            );
+        body: JSON.stringify({
+            nombre,
+            estado
+        })
 
-        } else {
+    });
 
-            response = await fetch(
-                `${API}/api/records`,
-                {
-                    method: "POST",
+    cancelarEdicion();
 
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify({
-                        nombre,
-                        estado
-                    })
-                }
-            );
-        }
-
-        const data =
-            await response.json();
-
-        if (!response.ok) {
-
-            mostrarMensaje(
-                data.error || "Error al guardar."
-            );
-
-            return;
-        }
-
-        mostrarMensaje(
-            registroEditando
-                ? "Registro actualizado."
-                : "Registro creado."
-        );
-
-        cancelarEdicion();
-
-        cargarRegistros();
-
-    } catch (error) {
-
-        mostrarMensaje(
-            "No se pudo conectar con el backend."
-        );
-
-        console.error(error);
-    }
+    cargarRegistros();
 }
 
 
-function editarRegistro(record) {
+function editarRegistro(id) {
 
-    registroEditando = record.id;
+    const registro =
+        registros.find(r => r.id === id);
 
-    document.getElementById("nombre").value =
-        record.nombre;
+    if (!registro) {
+        return;
+    }
 
-    document.getElementById("estado").value =
-        record.estado;
+    registroEditando = id;
 
-    document.getElementById("formTitle").textContent =
-        "Editar registro";
+    document.getElementById(
+        "registroNombre"
+    ).value = registro.nombre;
 
-    document.getElementById("cancelar").style.display =
-        "inline-block";
+    document.getElementById(
+        "registroEstado"
+    ).value = registro.estado;
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+    document.getElementById(
+        "formularioRegistro"
+    ).style.display = "block";
 }
 
 
 async function eliminarRegistro(id) {
 
-    if (!confirm(
-        "¿Seguro que deseas eliminar este registro?"
-    )) {
+    if (!confirm("¿Eliminar este registro?")) {
         return;
     }
 
-    try {
-
-        const response =
-            await fetch(
-                `${API}/api/records/${id}`,
-                {
-                    method: "DELETE"
-                }
-            );
-
-        const data =
-            await response.json();
-
-        if (!response.ok) {
-
-            mostrarMensaje(
-                data.error || "Error al eliminar."
-            );
-
-            return;
+    await fetch(
+        `${API}/api/records/${id}`,
+        {
+            method: "DELETE"
         }
+    );
 
-        mostrarMensaje(
-            "Registro eliminado."
-        );
-
-        cargarRegistros();
-
-    } catch (error) {
-
-        mostrarMensaje(
-            "No se pudo conectar con el backend."
-        );
-
-        console.error(error);
-    }
+    cargarRegistros();
 }
 
 
@@ -486,31 +879,76 @@ function cancelarEdicion() {
 
     registroEditando = null;
 
-    document.getElementById("nombre").value = "";
-
-    document.getElementById("estado").value =
-        "activo";
-
-    document.getElementById("formTitle").textContent =
-        "Nuevo registro";
-
-    document.getElementById("cancelar").style.display =
-        "none";
+    document.getElementById(
+        "formularioRegistro"
+    ).style.display = "none";
 }
 
 
-function mostrarMensaje(texto) {
+function actualizarDashboard() {
 
-    const mensaje =
-        document.getElementById("mensaje");
+    const activos =
+        registros.filter(
+            r => r.estado === "activo"
+        ).length;
 
-    mensaje.textContent = texto;
+    const inactivos =
+        registros.filter(
+            r => r.estado === "inactivo"
+        ).length;
 
-    setTimeout(() => {
+    document.getElementById(
+        "totalRegistros"
+    ).textContent =
+        registros.length;
 
-        mensaje.textContent = "";
+    document.getElementById(
+        "totalActivos"
+    ).textContent =
+        activos;
 
-    }, 3000);
+    document.getElementById(
+        "totalInactivos"
+    ).textContent =
+        inactivos;
+}
+
+
+async function generarReporte() {
+
+    await cargarRegistros();
+
+    const activos =
+        registros.filter(
+            r => r.estado === "activo"
+        ).length;
+
+    const inactivos =
+        registros.filter(
+            r => r.estado === "inactivo"
+        ).length;
+
+    document.getElementById(
+        "reporteTotal"
+    ).textContent =
+        registros.length;
+
+    document.getElementById(
+        "reporteActivos"
+    ).textContent =
+        activos;
+
+    document.getElementById(
+        "reporteInactivos"
+    ).textContent =
+        inactivos;
+
+    document.getElementById(
+        "reporteUltimo"
+    ).textContent =
+        registros.length
+            ? registros[0].nombre
+            : "Sin registros";
 }
 
 
@@ -525,7 +963,12 @@ function escapeHtml(text) {
 }
 
 
-cargarRegistros();
+if (
+    localStorage.getItem("drive847_token") &&
+    localStorage.getItem("drive847_user")
+) {
+    mostrarAplicacion();
+}
 
 </script>
 
