@@ -1,10 +1,18 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import sqlite3
+import hashlib
+import secrets
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 DB_PATH = BASE_DIR / "database" / "data" / "drive847.db"
+
+
+def hash_password(password):
+    return hashlib.sha256(
+        password.encode("utf-8")
+    ).hexdigest()
 
 
 def get_connection():
@@ -70,50 +78,102 @@ class Handler(BaseHTTPRequestHandler):
         })
 
     def do_POST(self):
-
-        if self.path != "/api/records":
-            self.send_json(404, {
-                "error": "Ruta no encontrada"
-            })
-            return
-
         try:
-
             data = self.read_json()
 
-            nombre = data.get("nombre")
-            estado = data.get("estado", "activo")
+            if self.path == "/api/login":
+                usuario = data.get("usuario")
+                password = data.get("password")
 
-            if not nombre:
-                self.send_json(400, {
-                    "error": "El campo nombre es obligatorio"
+                if not usuario or not password:
+                    self.send_json(400, {
+                        "error": "Usuario y contraseña son obligatorios"
+                    })
+                    return
+
+                password_hash = hashlib.sha256(
+                    password.encode("utf-8")
+                ).hexdigest()
+
+                connection = get_connection()
+
+                user = connection.execute(
+                    """
+                    SELECT id, nombre, usuario, rol, estado
+                    FROM users
+                    WHERE usuario = ?
+                    AND password = ?
+                    """,
+                    (usuario, password_hash)
+                ).fetchone()
+
+                connection.close()
+
+                if not user:
+                    self.send_json(401, {
+                        "error": "Usuario o contraseña incorrectos"
+                    })
+                    return
+
+                if user[4] != "activo":
+                    self.send_json(403, {
+                        "error": "El usuario está inactivo"
+                    })
+                    return
+
+                token = secrets.token_hex(32)
+
+                self.send_json(200, {
+                    "message": "Login correcto",
+                    "token": token,
+                    "user": {
+                        "id": user[0],
+                        "nombre": user[1],
+                        "usuario": user[2],
+                        "rol": user[3],
+                        "estado": user[4]
+                    }
                 })
                 return
 
-            connection = get_connection()
+            if self.path == "/api/records":
+                nombre = data.get("nombre")
+                estado = data.get("estado", "activo")
 
-            cursor = connection.execute(
-                """
-                INSERT INTO records (nombre, estado)
-                VALUES (?, ?)
-                """,
-                (nombre, estado)
-            )
+                if not nombre:
+                    self.send_json(400, {
+                        "error": "El campo nombre es obligatorio"
+                    })
+                    return
 
-            connection.commit()
+                connection = get_connection()
 
-            record_id = cursor.lastrowid
+                cursor = connection.execute(
+                    """
+                    INSERT INTO records (nombre, estado)
+                    VALUES (?, ?)
+                    """,
+                    (nombre, estado)
+                )
 
-            connection.close()
+                connection.commit()
 
-            self.send_json(201, {
-                "id": record_id,
-                "nombre": nombre,
-                "estado": estado
+                record_id = cursor.lastrowid
+
+                connection.close()
+
+                self.send_json(201, {
+                    "id": record_id,
+                    "nombre": nombre,
+                    "estado": estado
+                })
+                return
+
+            self.send_json(404, {
+                "error": "Ruta no encontrada"
             })
 
         except Exception as error:
-
             self.send_json(500, {
                 "error": str(error)
             })
