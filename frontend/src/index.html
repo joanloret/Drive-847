@@ -1,245 +1,529 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drive 847</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>Drive 847</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f3f4f6;
-            color: #111827;
-        }
+<style>
 
-        header {
-            background: #111827;
-            color: white;
-            padding: 24px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-        }
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f4f6;
+    color: #111827;
+}
 
-        header p {
-            margin: 6px 0 0;
-            color: #d1d5db;
-        }
+header {
+    background: #111827;
+    color: white;
+    padding: 24px;
+}
 
-        main {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
+header h1 {
+    margin: 0;
+}
 
-        .welcome {
-            margin-bottom: 25px;
-        }
+header p {
+    margin: 6px 0 0;
+    color: #d1d5db;
+}
 
-        .welcome h2 {
-            margin-bottom: 5px;
-        }
+main {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
 
-        .modules {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-        }
+.card {
+    background: white;
+    padding: 24px;
+    border-radius: 14px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08);
+}
 
-        .module {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 3px 10px rgba(0,0,0,.08);
-            cursor: pointer;
-            transition: transform .15s;
-        }
+input,
+select,
+button {
+    padding: 10px;
+    border-radius: 7px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+}
 
-        .module:hover {
-            transform: translateY(-3px);
-        }
+input,
+select {
+    width: 100%;
+    margin-bottom: 10px;
+}
 
-        .module h3 {
-            margin-top: 0;
-        }
+button {
+    background: #111827;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
 
-        .module p {
-            color: #6b7280;
-        }
+button:hover {
+    background: #374151;
+}
 
-        .status {
-            display: inline-block;
-            padding: 6px 10px;
-            border-radius: 20px;
-            background: #dcfce7;
-            color: #166534;
-            font-size: 13px;
-            font-weight: bold;
-        }
+button.delete {
+    background: #b91c1c;
+}
 
-        .records {
-            margin-top: 30px;
-            background: white;
-            padding: 24px;
-            border-radius: 14px;
-            box-shadow: 0 3px 10px rgba(0,0,0,.08);
-        }
+button.edit {
+    background: #2563eb;
+    margin-right: 5px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+.actions {
+    white-space: nowrap;
+}
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-        }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
 
-        th {
-            background: #f9fafb;
-        }
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
 
-        button {
-            background: #111827;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            padding: 10px 16px;
-            cursor: pointer;
-        }
+th {
+    background: #f9fafb;
+}
 
-        button:hover {
-            background: #374151;
-        }
+.status {
+    margin-top: 12px;
+    font-weight: bold;
+}
 
-        #mensaje {
-            margin-top: 12px;
-            font-weight: bold;
-        }
-    </style>
+.empty {
+    text-align: center;
+    color: #6b7280;
+    padding: 30px;
+}
+
+@media (max-width: 700px) {
+
+    table {
+        font-size: 13px;
+    }
+
+    .actions button {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
+
     <h1>Drive 847</h1>
-    <p>Panel principal del sistema</p>
+
+    <p>
+        Sistema de gestión
+    </p>
+
 </header>
 
 <main>
 
-    <section class="welcome">
-        <h2>Panel principal</h2>
-        <p>Selecciona un módulo para comenzar.</p>
-    </section>
+<section class="card">
 
-    <section class="modules">
+    <h2 id="formTitle">
+        Nuevo registro
+    </h2>
 
-        <div class="module" onclick="mostrarRegistros()">
-            <h3>📋 Registros</h3>
-            <p>Administrar y consultar los registros del sistema.</p>
-            <span class="status">Activo</span>
-        </div>
+    <input
+        id="nombre"
+        type="text"
+        placeholder="Nombre del registro"
+    >
 
-        <div class="module">
-            <h3>📊 Reportes</h3>
-            <p>Próximamente podrás consultar información y estadísticas.</p>
-            <span class="status">Próximamente</span>
-        </div>
+    <select id="estado">
 
-        <div class="module">
-            <h3>⚙️ Configuración</h3>
-            <p>Configuración general del sistema.</p>
-            <span class="status">Próximamente</span>
-        </div>
+        <option value="activo">
+            Activo
+        </option>
 
-    </section>
+        <option value="inactivo">
+            Inactivo
+        </option>
 
-    <section class="records" id="records">
+    </select>
 
-        <h2>Registros</h2>
+    <button onclick="guardarRegistro()">
+        Guardar
+    </button>
 
-        <button onclick="cargarRegistros()">
-            Actualizar registros
-        </button>
+    <button
+        id="cancelar"
+        onclick="cancelarEdicion()"
+        style="display:none; margin-left:5px;"
+    >
+        Cancelar
+    </button>
 
-        <div id="mensaje"></div>
+    <div id="mensaje" class="status"></div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
+</section>
 
-            <tbody id="tabla">
-            </tbody>
-        </table>
 
-    </section>
+<section class="card">
+
+    <h2>
+        Registros
+    </h2>
+
+    <button onclick="cargarRegistros()">
+        Actualizar
+    </button>
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>Nombre</th>
+
+                <th>Estado</th>
+
+                <th>Fecha</th>
+
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla">
+
+        </tbody>
+
+    </table>
+
+</section>
 
 </main>
+
 
 <script>
 
 const API = "http://localhost:8470";
 
-function mostrarRegistros() {
-    document.getElementById("records").scrollIntoView({
-        behavior: "smooth"
-    });
-}
+let registroEditando = null;
+
 
 async function cargarRegistros() {
 
-    const mensaje = document.getElementById("mensaje");
-
     try {
 
-        const response = await fetch(`${API}/api/records`);
-        const data = await response.json();
+        const response =
+            await fetch(`${API}/api/records`);
 
-        const tabla = document.getElementById("tabla");
+        const data =
+            await response.json();
+
+        const tabla =
+            document.getElementById("tabla");
 
         tabla.innerHTML = "";
 
+        if (data.records.length === 0) {
+
+            tabla.innerHTML = `
+                <tr>
+                    <td colspan="5" class="empty">
+                        No existen registros.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
         data.records.forEach(record => {
 
-            const fila = document.createElement("tr");
+            const fila =
+                document.createElement("tr");
 
             fila.innerHTML = `
-                <td>${record.id}</td>
-                <td>${record.nombre}</td>
-                <td>${record.estado}</td>
-                <td>${record.created_at}</td>
+
+                <td>
+                    ${record.id}
+                </td>
+
+                <td>
+                    ${escapeHtml(record.nombre)}
+                </td>
+
+                <td>
+                    ${escapeHtml(record.estado)}
+                </td>
+
+                <td>
+                    ${record.created_at}
+                </td>
+
+                <td class="actions">
+
+                    <button
+                        class="edit"
+                        onclick='editarRegistro(${JSON.stringify(record)})'
+                    >
+                        Editar
+                    </button>
+
+                    <button
+                        class="delete"
+                        onclick="eliminarRegistro(${record.id})"
+                    >
+                        Eliminar
+                    </button>
+
+                </td>
+
             `;
 
             tabla.appendChild(fila);
-        });
 
-        mensaje.textContent =
-            `${data.total} registro(s) encontrado(s).`;
+        });
 
     } catch (error) {
 
-        mensaje.textContent =
-            "No se pudo conectar con el backend.";
+        mostrarMensaje(
+            "No se pudo conectar con el backend."
+        );
 
         console.error(error);
     }
 }
+
+
+async function guardarRegistro() {
+
+    const nombre =
+        document.getElementById("nombre").value.trim();
+
+    const estado =
+        document.getElementById("estado").value;
+
+    if (!nombre) {
+
+        mostrarMensaje(
+            "Escribe un nombre."
+        );
+
+        return;
+    }
+
+    try {
+
+        let response;
+
+        if (registroEditando) {
+
+            response = await fetch(
+                `${API}/api/records/${registroEditando}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        nombre,
+                        estado
+                    })
+                }
+            );
+
+        } else {
+
+            response = await fetch(
+                `${API}/api/records`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        nombre,
+                        estado
+                    })
+                }
+            );
+        }
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            mostrarMensaje(
+                data.error || "Error al guardar."
+            );
+
+            return;
+        }
+
+        mostrarMensaje(
+            registroEditando
+                ? "Registro actualizado."
+                : "Registro creado."
+        );
+
+        cancelarEdicion();
+
+        cargarRegistros();
+
+    } catch (error) {
+
+        mostrarMensaje(
+            "No se pudo conectar con el backend."
+        );
+
+        console.error(error);
+    }
+}
+
+
+function editarRegistro(record) {
+
+    registroEditando = record.id;
+
+    document.getElementById("nombre").value =
+        record.nombre;
+
+    document.getElementById("estado").value =
+        record.estado;
+
+    document.getElementById("formTitle").textContent =
+        "Editar registro";
+
+    document.getElementById("cancelar").style.display =
+        "inline-block";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+async function eliminarRegistro(id) {
+
+    if (!confirm(
+        "¿Seguro que deseas eliminar este registro?"
+    )) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                `${API}/api/records/${id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            mostrarMensaje(
+                data.error || "Error al eliminar."
+            );
+
+            return;
+        }
+
+        mostrarMensaje(
+            "Registro eliminado."
+        );
+
+        cargarRegistros();
+
+    } catch (error) {
+
+        mostrarMensaje(
+            "No se pudo conectar con el backend."
+        );
+
+        console.error(error);
+    }
+}
+
+
+function cancelarEdicion() {
+
+    registroEditando = null;
+
+    document.getElementById("nombre").value = "";
+
+    document.getElementById("estado").value =
+        "activo";
+
+    document.getElementById("formTitle").textContent =
+        "Nuevo registro";
+
+    document.getElementById("cancelar").style.display =
+        "none";
+}
+
+
+function mostrarMensaje(texto) {
+
+    const mensaje =
+        document.getElementById("mensaje");
+
+    mensaje.textContent = texto;
+
+    setTimeout(() => {
+
+        mensaje.textContent = "";
+
+    }, 3000);
+}
+
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+}
+
 
 cargarRegistros();
 
